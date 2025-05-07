@@ -4,10 +4,15 @@
     "config:recommended"
   ],
   "kubernetes": {
-    "fileMatch": ["\\.yml$", "\\.yaml$"]
+    "managerFilePatterns": [
+      "/\\.yml$/",
+      "/\\.yaml$/"
+    ]
   },
   "dockerfile": {
-    "fileMatch": ["^Dockerfile$"]
+    "managerFilePatterns": [
+      "/^Dockerfile$/"
+    ]
   },
   "prHourlyLimit": 10,
   "prConcurrentLimit": 5
