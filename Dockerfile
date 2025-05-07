@@ -1,21 +1,24 @@
-# Imagen desactualizada de Node.js
-FROM node:10.16.0
+# Imagen desactualizada de .NET
+FROM mcr.microsoft.com/dotnet/sdk:2.1
 
 # Establecer el directorio de trabajo
 WORKDIR /app
 
 # Copiar los archivos necesarios
-COPY package.json .
-COPY package-lock.json .
+COPY *.csproj .
+COPY *.sln .
 
-# Instalar dependencias
-RUN npm install
+# Restaurar dependencias
+RUN dotnet restore
 
-# Copiar la aplicación
+# Copiar la aplicación completa
 COPY . .
 
+# Compilar la aplicación
+RUN dotnet build -c Release -o out
+
 # Exponer el puerto
-EXPOSE 3000
+EXPOSE 5000
 
 # Comando de inicio
-CMD ["npm", "start"]
+CMD ["dotnet", "out/MyApp.dll"]
