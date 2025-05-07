@@ -10,5 +10,6 @@
     "fileMatch": ["^Dockerfile$"]
   },
   "prHourlyLimit": 10,
-  "prConcurrentLimit": 5
+  "prConcurrentLimit": 5,
+  "prCreationRetries": 3
 }
