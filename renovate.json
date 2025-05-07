@@ -5,5 +5,8 @@
   ],
   "kubernetes": {
     "fileMatch": ["\\.yml$", "\\.yaml$"]
+  },
+  "dockerfile": {
+    "fileMatch": ["^Dockerfile$"]
   }
 }
