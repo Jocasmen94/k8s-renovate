@@ -3,6 +3,9 @@
   "extends": [
     "config:recommended"
   ],
+  "baseBranches": [
+    "prod-main-k8s"
+  ],
   "kubernetes": {
     "managerFilePatterns": [
       "/\\.yml$/",
