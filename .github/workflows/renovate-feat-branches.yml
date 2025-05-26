@@ -3,6 +3,13 @@ name: Check and Update Versions
 on:
   schedule:
     - cron: '*/10 * * * *' # Ejecuta cada 10 minutos
+  push:
+    branches:
+      - prod-payments-k8s
+      - feat/prod-payments-k8s
+  pull_request:
+    branches:
+      - prod-payments-k8s
   workflow_dispatch: # Permite ejecutarlo manualmente
 
 jobs:
@@ -22,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install yq jq gitpython
+          pip install yq jq gitpython requests
 
       - name: Check and Update Versions
         env:
@@ -30,53 +37,84 @@ jobs:
           MAIN_BRANCH: prod-main-cluster
           FEAT_BRANCH: feat
         run: |
-          # Clona las ramas relevantes
+          # Asegura que las ramas existen
           git fetch origin $MAIN_BRANCH
           git fetch origin $FEAT_BRANCH
 
-          # Función para verificar y actualizar versiones (ejemplo simplificado)
+          # Script para verificar y actualizar versiones
           check_and_update() {
             branch=$1
+            target_branch=$2
+            echo "Verificando rama $branch..."
+
+            # Cambia a la rama especificada
             git checkout $branch
 
-            # Ejemplo: Buscar y actualizar versiones en Dockerfiles
+            # Verifica y actualiza versiones en Dockerfiles
             for dockerfile in $(find . -name Dockerfile); do
-              current_version=$(grep -o 'FROM .*:[0-9.]*' $dockerfile | cut -d':' -f2)
-              if [ -n "$current_version" ]; then
-                # Simulación: Busca una nueva versión (puedes usar APIs como Docker Hub)
-                new_version="1.2.3" # Reemplazar con lógica real
-                if [ "$new_version" != "$current_version" ]; then
-                  sed -i "s/FROM .*:$current_version/FROM .*:$new_version/" $dockerfile
+              current_image=$(grep -o 'FROM .*:.*' $dockerfile | head -1 | cut -d' ' -f2)
+              if [ -n "$current_image" ]; then
+                image_name=$(echo $current_image | cut -d':' -f1)
+                current_version=$(echo $current_image | cut -d':' -f2)
+                # Consulta la última versión en Docker Hub (usando API)
+                latest_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/$image_name/tags" | jq -r '.results[] | select(.name != "latest") | .name' | sort -V | tail -1)
+                if [ -n "$latest_version" ] && [ "$latest_version" != "$current_version" ]; then
+                  sed -i "s|FROM $image_name:$current_version|FROM $image_name:$latest_version|" $dockerfile
                   git add $dockerfile
-                  git commit -m "Update Dockerfile to version $new_version in $branch"
+                  git commit -m "Update Dockerfile $image_name to version $latest_version in $branch"
                   git push origin $branch
+                  echo "Dockerfile actualizado: $image_name de $current_version a $latest_version"
                 fi
               fi
             done
 
-            # Ejemplo: Actualizar Helm Charts (usando yq para YAML)
+            # Verifica y actualiza Helm Charts (Chart.yaml)
             for chart in $(find . -name Chart.yaml); do
               current_version=$(yq e '.version' $chart)
-              # Simulación: Nueva versión
-              new_version=$(echo $current_version | awk -F. '{$NF += 1; print $0}')
+              new_version=$(echo $current_version | awk -F. '{$NF += 1; print $0}' | sed 's/ /./g')
               if [ -n "$new_version" ] && [ "$new_version" != "$current_version" ]; then
                 yq e -i ".version = \"$new_version\"" $chart
                 git add $chart
                 git commit -m "Update Helm Chart to version $new_version in $branch"
                 git push origin $branch
+                echo "Helm Chart actualizado: de $current_version a $new_version"
+              fi
+            done
+
+            # Verifica y actualiza Kubernetes YAML (ejemplo: imágenes)
+            for yaml in $(find . -name '*.yaml' -o -name '*.yml'); do
+              current_image=$(yq e '.. | select(has("image")) | .image' $yaml | head -1)
+              if [ -n "$current_image" ]; then
+                image_name=$(echo $current_image | cut -d':' -f1)
+                current_version=$(echo $current_image | cut -d':' -f2)
+                latest_version=$(curl -s "https://registry.hub.docker.com/v2/repositories/$image_name/tags" | jq -r '.results[] | select(.name != "latest") | .name' | sort -V | tail -1)
+                if [ -n "$latest_version" ] && [ "$latest_version" != "$current_version" ]; then
+                  yq e -i "(.. | select(has(\"image\")) | .image) = \"$image_name:$latest_version\"" $yaml
+                  git add $yaml
+                  git commit -m "Update Kubernetes YAML $image_name to version $latest_version in $branch"
+                  git push origin $branch
+                  echo "Kubernetes YAML actualizado: $image_name de $current_version a $latest_version"
+                fi
               fi
             done
 
             # Crear PR si hay cambios
-            if [ -n "$(git status --porcelain)" ]; then
-              hub pull-request -m "Automated update of versions in $branch" -b $MAIN_BRANCH -h $branch
+            if [ -n "$(git diff --name-only HEAD^ HEAD)" ]; then
+              # Crear una rama temporal para el PR
+              temp_branch="update-versions-$(date +%s)"
+              git checkout -b $temp_branch
+              git push origin $temp_branch
+              # Crear PR usando gh CLI
+              gh pr create --title "Automated version updates for $branch" --body "Updated versions in $branch" --base $target_branch --head $temp_branch
             fi
           }
 
           # Ejecutar chequeo en ambas ramas
-          check_and_update $MAIN_BRANCH
-          check_and_update $FEAT_BRANCH
+          # Actualizar feat y crear PR hacia prod-main-cluster
+          check_and_update $FEAT_BRANCH $MAIN_BRANCH
+          # Actualizar prod-main-cluster (opcional, sin PR si no hay rama base)
+          check_and_update $MAIN_BRANCH $MAIN_BRANCH
 
-      - name: Install hub (for PR creation)
+      - name: Install GitHub CLI (gh)
         run: |
-          sudo apt-get update && sudo apt-get install -y hub
+          sudo apt-get update && sudo apt-get install -y gh
