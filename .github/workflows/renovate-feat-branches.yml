@@ -1,22 +1,82 @@
-name: Renovate en feat/prod-main-test
+name: Check and Update Versions
 
 on:
   schedule:
-    - cron: "*/10 * * * *" # Cada 10 minutos
-  workflow_dispatch:
+    - cron: '*/10 * * * *' # Ejecuta cada 10 minutos
+  workflow_dispatch: # Permite ejecutarlo manualmente
 
 jobs:
-  renovate:
+  check-updates:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout feature branch
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          ref: feat/prod-main-test
+          fetch-depth: 0 # Necesario para ver todo el historial
 
-      - name: Run Renovate
-        uses: renovatebot/github-action@v39.0.5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          configurationFile: renovate.json
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install yq jq gitpython
+
+      - name: Check and Update Versions
         env:
-          RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAIN_BRANCH: prod-main-cluster
+          FEAT_BRANCH: feat
+        run: |
+          # Clona las ramas relevantes
+          git fetch origin $MAIN_BRANCH
+          git fetch origin $FEAT_BRANCH
+
+          # Función para verificar y actualizar versiones (ejemplo simplificado)
+          check_and_update() {
+            branch=$1
+            git checkout $branch
+
+            # Ejemplo: Buscar y actualizar versiones en Dockerfiles
+            for dockerfile in $(find . -name Dockerfile); do
+              current_version=$(grep -o 'FROM .*:[0-9.]*' $dockerfile | cut -d':' -f2)
+              if [ -n "$current_version" ]; then
+                # Simulación: Busca una nueva versión (puedes usar APIs como Docker Hub)
+                new_version="1.2.3" # Reemplazar con lógica real
+                if [ "$new_version" != "$current_version" ]; then
+                  sed -i "s/FROM .*:$current_version/FROM .*:$new_version/" $dockerfile
+                  git add $dockerfile
+                  git commit -m "Update Dockerfile to version $new_version in $branch"
+                  git push origin $branch
+                fi
+              fi
+            done
+
+            # Ejemplo: Actualizar Helm Charts (usando yq para YAML)
+            for chart in $(find . -name Chart.yaml); do
+              current_version=$(yq e '.version' $chart)
+              # Simulación: Nueva versión
+              new_version=$(echo $current_version | awk -F. '{$NF += 1; print $0}')
+              if [ -n "$new_version" ] && [ "$new_version" != "$current_version" ]; then
+                yq e -i ".version = \"$new_version\"" $chart
+                git add $chart
+                git commit -m "Update Helm Chart to version $new_version in $branch"
+                git push origin $branch
+              fi
+            done
+
+            # Crear PR si hay cambios
+            if [ -n "$(git status --porcelain)" ]; then
+              hub pull-request -m "Automated update of versions in $branch" -b $MAIN_BRANCH -h $branch
+            fi
+          }
+
+          # Ejecutar chequeo en ambas ramas
+          check_and_update $MAIN_BRANCH
+          check_and_update $FEAT_BRANCH
+
+      - name: Install hub (for PR creation)
+        run: |
+          sudo apt-get update && sudo apt-get install -y hub
