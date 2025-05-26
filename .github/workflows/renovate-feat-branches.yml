@@ -35,7 +35,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAIN_BRANCH: prod-payments-k8s
-          FEAT_BRANCH: feat
+          FEAT_BRANCH: feat/prod-payments-k8s
         run: |
           # Asegura que las ramas existen
           git fetch origin $MAIN_BRANCH
