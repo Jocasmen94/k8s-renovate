@@ -1,21 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "baseBranches": [
-    "prod-main-k8s"
-  ],
+  "extends": ["config:recommended"],
+  "baseBranches": ["prod-main-k8s"],
   "kubernetes": {
-    "managerFilePatterns": [
-      "/\\.yml$/",
-      "/\\.yaml$/"
-    ]
+    "managerFilePatterns": ["/\\.yml$/", "/\\.yaml$/"]
   },
   "dockerfile": {
-    "managerFilePatterns": [
-      "/^Dockerfile$/"
-    ]
+    "managerFilePatterns": ["/^Dockerfile$/"]
   },
   "prHourlyLimit": 10,
   "prConcurrentLimit": 5
