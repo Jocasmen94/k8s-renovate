@@ -1,22 +1,20 @@
-name: Renovate en feat/prod-main-test
+name: Renovate para prod-main-k8s
 
 on:
-  schedule:
-    - cron: "*/10 * * * *" # Cada 10 minutos
   workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"  # Cada 10 minutos (opcional)
 
 jobs:
   renovate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout feature branch
+      - name: Checkout feat/prod-main-k8s
         uses: actions/checkout@v3
         with:
-          ref: feat/prod-main-test
+          ref: feat/prod-main-k8s
 
       - name: Run Renovate
         uses: renovatebot/github-action@v39.0.5
         with:
           configurationFile: renovate.json
-        env:
-          RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
