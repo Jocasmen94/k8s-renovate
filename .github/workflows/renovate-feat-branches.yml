@@ -34,7 +34,7 @@ jobs:
       - name: Check and Update Versions
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAIN_BRANCH: prod-main-cluster
+          MAIN_BRANCH: prod-payments-k8s
           FEAT_BRANCH: feat
         run: |
           # Asegura que las ramas existen
@@ -110,9 +110,9 @@ jobs:
           }
 
           # Ejecutar chequeo en ambas ramas
-          # Actualizar feat y crear PR hacia prod-main-cluster
+          # Actualizar feat y crear PR hacia prod-payments-k8s
           check_and_update $FEAT_BRANCH $MAIN_BRANCH
-          # Actualizar prod-main-cluster (opcional, sin PR si no hay rama base)
+          # Actualizar prod-payments-k8s (opcional, sin PR si no hay rama base)
           check_and_update $MAIN_BRANCH $MAIN_BRANCH
 
       - name: Install GitHub CLI (gh)
