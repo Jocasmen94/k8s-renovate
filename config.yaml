@@ -1,0 +1,7 @@
+backend: ollama
+
+ai:
+  provider: ollama
+  ollama:
+    model: llama3
+    host: http://localhost:11434
