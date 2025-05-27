@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: prod-payments-k8s # Usa prod-payments-k8s como base
+          ref: prod-payments-k8s
           fetch-depth: 0
 
       - name: List files in repository
@@ -30,14 +30,13 @@ jobs:
       - name: Run Renovate
         uses: renovatebot/github-action@v39.2.4
         env:
-          RENOVATE_REPOSITORIES: "Jocasmen94/k8s-renovate" # Especifica el repositorio explícitamente
-          RENOVATE_BASE_BRANCHES: "prod-payments-k8s" # Rama base para escaneo
-          RENOVATE_TARGET_BRANCH: "feat/prod-payments-k8s" # Rama objetivo para PRs
-          RENOVATE_BRANCH_PREFIX: "renovate/" # Prefijo para ramas temporales
-          RENOVATE_PR_CREATION: "immediate" # Crea PRs inmediatamente
-          RENOVATE_AUTOMERGE: false # No automerge para que revises los PRs
-          RENOVATE_ONBOARDING: false # Evita el PR de onboarding
-          LOG_LEVEL: "debug" # Para depuración
+          RENOVATE_BASE_BRANCHES: "prod-payments-k8s"
+          RENOVATE_TARGET_BRANCH: "feat/prod-payments-k8s"
+          RENOVATE_BRANCH_PREFIX: "renovate/"
+          RENOVATE_PR_CREATION: "immediate"
+          RENOVATE_AUTOMERGE: false
+          RENOVATE_ONBOARDING: false
+          LOG_LEVEL: "debug"
         with:
           configurationFile: renovate.json
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

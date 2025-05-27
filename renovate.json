@@ -1,7 +1,7 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:recommended"],
-    "schedule": [], 
+    "schedule": [],
     "docker": {
       "enabled": true,
       "fileMatch": ["^Dockerfile$"]
@@ -21,5 +21,6 @@
     "prConcurrentLimit": 5,
     "dependencyDashboard": false,
     "platform": "github",
-    "repository": "Jocasmen94/k8s-renovate"
+    "repository": "Jocasmen94/k8s-renovate",
+    "recreateClosed": true
   }
