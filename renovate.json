@@ -4,28 +4,28 @@
     "schedule": [],
     "docker": {
       "enabled": true,
-      "managerFilePatterns": ["^Dockerfile$"]
+      "fileMatch": ["^Dockerfile$"]
     },
     "helmv3": {
       "enabled": true,
-      "managerFilePatterns": ["/(^|/)Chart\\.yaml$/"]
+      "fileMatch": ["/(^|/)Chart\\.yaml$/"]
     },
     "kubernetes": {
       "enabled": true,
-      "managerFilePatterns": ["/\\.yml$/", "/\\.yaml$/"]
+      "fileMatch": ["/\\.yml$/", "/\\.yaml$/"]
     },
     "assignees": ["Jocasmen94"],
     "labels": ["dependencies"],
     "branchPrefix": "renovate/",
     "prHourlyLimit": 4,
     "prConcurrentLimit": 5,
-    "dependencyDashboard": true,  
-    "dependencyDashboardTitle": "Dependency Dashboard",  
-    "dependencyDashboardLabels": ["dependencies", "renovate"],  
-    "dependencyDashboardAutoclose": true,  
+    "dependencyDashboard": true,
+    "dependencyDashboardTitle": "Dependency Dashboard",
+    "dependencyDashboardLabels": ["dependencies", "renovate"],
+    "dependencyDashboardAutoclose": true,
     "platform": "github",
     "repository": "Jocasmen94/k8s-renovate",
     "recreateWhen": "never",
-    "prCreation": "not-pending",
-    "ignorePrEdits": false
+    "prCreation": "immediate",
+    "baseBranches": ["prod-payments-k8s"]
   }
