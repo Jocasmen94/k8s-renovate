@@ -22,9 +22,15 @@ jobs:
           ref: prod-payments-k8s # Usa prod-payments-k8s como base
           fetch-depth: 0
 
+      - name: List files in repository
+        run: |
+          echo "Listing files in the repository:"
+          find . -type f
+
       - name: Run Renovate
         uses: renovatebot/github-action@v39.2.4
         env:
+          RENOVATE_REPOSITORIES: "Jocasmen94/k8s-renovate" # Especifica el repositorio explícitamente
           RENOVATE_BASE_BRANCHES: "prod-payments-k8s" # Rama base para escaneo
           RENOVATE_TARGET_BRANCH: "feat/prod-payments-k8s" # Rama objetivo para PRs
           RENOVATE_BRANCH_PREFIX: "renovate/" # Prefijo para ramas temporales

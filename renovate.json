@@ -16,7 +16,6 @@
     },
     "assignees": ["Jocasmen94"],
     "labels": ["dependencies"],
-    "baseBranches": ["prod-payments-k8s"],
     "branchPrefix": "renovate/",
     "prHourlyLimit": 10,
     "prConcurrentLimit": 5,
