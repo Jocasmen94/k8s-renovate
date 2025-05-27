@@ -30,5 +30,5 @@
     "recreateWhen": "auto",
     "dependencyDashboardFooter": "\n- [ ] <!-- manual job -->Check this box to trigger a request for Renovate to run again on this repository\n",
     "prCreation": "immediate",
-    "baseBranches": ["feat/prod-payments-k8s"]  
+    "baseBranches": ["feat/prod-payments-k8s"]
   }
