@@ -1,0 +1,26 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended"],
+    "schedule": [],
+    "docker": {
+      "enabled": true,
+      "managerFilePatterns": ["^Dockerfile$"]
+    },
+    "helmv3": {
+      "enabled": true,
+      "managerFilePatterns": ["/(^|/)Chart\\.yaml$/"]
+    },
+    "kubernetes": {
+      "enabled": true,
+      "managerFilePatterns": ["/\\.yml$/", "/\\.yaml$/"]
+    },
+    "assignees": ["Jocasmen94"],
+    "labels": ["dependencies"],
+    "branchPrefix": "renovate/",
+    "prHourlyLimit": 13,
+    "prConcurrentLimit": 5,
+    "dependencyDashboard": false,
+    "platform": "github",
+    "repository": "Jocasmen94/k8s-renovate",
+    "recreateWhen": "never"  
+  }
