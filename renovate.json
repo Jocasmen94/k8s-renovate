@@ -24,7 +24,7 @@
     "dependencyDashboardLabels": ["dependencies", "renovate"],
     "dependencyDashboardAutoclose": true,
     "pruneStaleBranches": true,
-    "dependencyDashboardApproval": true,
+    "dependencyDashboardApproval": false,
     "platform": "github",
     "repository": "Jocasmen94/k8s-renovate",
     "recreateWhen": "auto",
