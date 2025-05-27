@@ -4,15 +4,15 @@
     "schedule": [],
     "docker": {
       "enabled": true,
-      "fileMatch": ["^Dockerfile$"]
+      "managerFilePatterns": ["^Dockerfile$"]
     },
     "helmv3": {
       "enabled": true,
-      "fileMatch": ["(^|/)Chart\\.yaml$"]
+      "managerFilePatterns": ["/(^|/)Chart\\.yaml$/"]
     },
     "kubernetes": {
       "enabled": true,
-      "fileMatch": ["\\.yml$", "\\.yaml$"]
+      "managerFilePatterns": ["/\\.yml$/", "/\\.yaml$/"]
     },
     "assignees": ["Jocasmen94"],
     "labels": ["dependencies"],
@@ -22,5 +22,5 @@
     "dependencyDashboard": false,
     "platform": "github",
     "repository": "Jocasmen94/k8s-renovate",
-    "recreateClosed": true
+    "recreateWhen": "always"
   }

@@ -30,13 +30,14 @@ jobs:
       - name: Run Renovate
         uses: renovatebot/github-action@v39.2.4
         env:
-          RENOVATE_BASE_BRANCHES: "prod-payments-k8s"
-          RENOVATE_TARGET_BRANCH: "feat/prod-payments-k8s"
+          RENOVATE_REPOSITORIES: "Jocasmen94/k8s-renovate" # Especifica el repositorio explícitamente
+          RENOVATE_BASE_BRANCHES: "prod-payments-k8s" # Rama base para escaneo
+          RENOVATE_TARGET_BRANCH: "feat/prod-payments-k8s" # Rama objetivo para PRs
           RENOVATE_BRANCH_PREFIX: "renovate/"
-          RENOVATE_PR_CREATION: "immediate"
-          RENOVATE_AUTOMERGE: false
-          RENOVATE_ONBOARDING: false
-          LOG_LEVEL: "debug"
+          RENOVATE_PR_CREATION: "immediate" # Crea PRs inmediatamente
+          RENOVATE_AUTOMERGE: false # No automerge para que revises los PRs
+          RENOVATE_ONBOARDING: false # Evita el PR de onboarding
+          LOG_LEVEL: "debug" # Para depuración
         with:
           configurationFile: renovate.json
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
