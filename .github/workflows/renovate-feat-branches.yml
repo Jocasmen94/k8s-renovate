@@ -23,15 +23,15 @@ jobs:
           fetch-depth: 0
 
       - name: Run Renovate
-        uses: renovatebot/github-action@v39.2.4 # Actualizamos a una versión más reciente
+        uses: renovatebot/github-action@v39.2.4
         env:
-          RENOVATE_BASE_BRANCHES: prod-payments-k8s # Usamos variable de entorno para evitar problemas de sintaxis
-          RENOVATE_BRANCH_PREFIX: renovate/ # Prefijo para ramas temporales
-          RENOVATE_PR_CREATION: immediate # Crea PRs inmediatamente
+          RENOVATE_BASE_BRANCHES: "prod-payments-k8s" # Rama base para escaneo
+          RENOVATE_TARGET_BRANCH: "feat/prod-payments-k8s" # Rama objetivo para PRs
+          RENOVATE_BRANCH_PREFIX: "renovate/" # Prefijo para ramas temporales
+          RENOVATE_PR_CREATION: "immediate" # Crea PRs inmediatamente
           RENOVATE_AUTOMERGE: false # No automerge para que revises los PRs
-          RENOVATE_DEFAULT_BRANCH: prod-payments-k8s # Rama por defecto
           RENOVATE_ONBOARDING: false # Evita el PR de onboarding
-          LOG_LEVEL: debug # Para depuración
+          LOG_LEVEL: "debug" # Para depuración
         with:
           configurationFile: renovate.json
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
