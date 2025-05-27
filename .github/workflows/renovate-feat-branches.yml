@@ -3,6 +3,13 @@ name: Check and Update Versions with Renovate
 on:
   schedule:
     - cron: '*/10 * * * *' # Ejecuta cada 10 minutos
+  push:
+    branches:
+      - prod-payments-k8s
+      - feat/prod-payments-k8s
+  pull_request:
+    branches:
+      - prod-payments-k8s
   workflow_dispatch: # Permite ejecutarlo manualmente
 
 jobs:
