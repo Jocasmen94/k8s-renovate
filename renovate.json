@@ -1,0 +1,29 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:base"],
+    "schedule": [], 
+    "docker": {
+      "enabled": true,
+      "fileMatch": ["^Dockerfile$"]
+    },
+    "helmv3": {
+      "enabled": true,
+      "fileMatch": ["(^|/)Chart\\.yaml$"]
+    },
+    "kubernetes": {
+      "enabled": true,
+      "fileMatch": ["\\.yml$", "\\.yaml$"]
+    },
+    "assignees": ["Jocasmen94"],
+    "labels": ["dependencies"],
+    "baseBranches": ["prod-payments-k8s"],
+    "defaultBranch": "prod-payments-k8s",
+    "branchPrefix": "renovate/",
+    "prHourlyLimit": 10,
+    "prConcurrentLimit": 5,
+    "dependencyDashboard": false, 
+    "platform": "github",
+    "repository": "Jocasmen94/k8s-renovate",
+    "prCreation": "immediate",
+    "targetBranch": "feat/prod-payments-k8s" 
+  }

@@ -1,130 +1,30 @@
-name: Check and Update Versions # test
+name: Check and Update Versions with Renovate
 
 on:
   schedule:
     - cron: '*/10 * * * *' # Ejecuta cada 10 minutos
-  push:
-    branches:
-      - prod-payments-k8s
-      - feat/prod-payments-k8s
-  pull_request:
-    branches:
-      - prod-payments-k8s
   workflow_dispatch: # Permite ejecutarlo manualmente
 
 jobs:
-  check-updates:
+  renovate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: prod-payments-k8s # Usa prod-payments-k8s como base
-          fetch-depth: 0 # Necesario para ver todo el historial
+          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install yq jq requests
-          sudo apt-get update && sudo apt-get install -y gh
-
-      - name: Check and Update Versions
+      - name: Run Renovate
+        uses: renovatebot/github-action@v39.2.4 # Actualizamos a una versión más reciente
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Para checkout y PRs
-          PAT: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # Token personal para push
-          MAIN_BRANCH: prod-payments-k8s
-          FEAT_BRANCH: feat/prod-payments-k8s
-        run: |
-          # Configura el token personal para git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${PAT}@github.com/Jocasmen94/k8s-renovate.git
-
-          # Asegura que las ramas existen
-          git fetch origin $MAIN_BRANCH
-          git fetch origin $FEAT_BRANCH
-
-          # Script para verificar y actualizar versiones
-          check_and_update() {
-            branch=$1
-            target_branch=$2
-            echo "Verificando rama $branch..."
-
-            # Cambia a la rama especificada
-            git checkout $branch
-
-            # Variable para rastrear si hay cambios
-            has_changes=false
-
-            # Verifica y actualiza versiones en Dockerfile
-            if [ -f "Dockerfile" ]; then
-              current_image=$(grep -o 'FROM .*:.*' Dockerfile | head -1 | cut -d' ' -f2 || echo "")
-              if [ -n "$current_image" ]; then
-                image_name=$(echo $current_image | cut -d':' -f1)
-                current_version=$(echo $current_image | cut -d':' -f2)
-                latest_version=$(curl -s -f "https://registry.hub.docker.com/v2/repositories/$image_name/tags?page_size=100" | jq -r '.results[] | select(.name != "latest") | .name' | sort -V | tail -1 || echo "$current_version")
-                if [ "$latest_version" != "$current_version" ] && [ -n "$latest_version" ]; then
-                  sed -i "s|FROM $image_name:$current_version|FROM $image_name:$latest_version|" Dockerfile
-                  git add Dockerfile
-                  git commit -m "Update Dockerfile $image_name to version $latest_version in $branch"
-                  echo "Dockerfile actualizado: $image_name de $current_version a $latest_version"
-                  has_changes=true
-                fi
-              fi
-            fi
-
-            # Verifica y actualiza Helm Charts (values.yml o Chart.yaml si existe)
-            for chart_file in $(find . -name 'values.yml' -o -name 'Chart.yaml'); do
-              if [ -f "$chart_file" ]; then
-                current_version=$(yq e '.version' $chart_file 2>/dev/null || echo "")
-                if [ -n "$current_version" ]; then
-                  new_version=$(echo $current_version | awk -F. '{$NF += 1; print $0}' | sed 's/ /./g')
-                  if [ "$new_version" != "$current_version" ]; then
-                    yq e -i ".version = \"$new_version\"" $chart_file
-                    git add $chart_file
-                    git commit -m "Update Helm Chart to version $new_version in $branch"
-                    echo "Helm Chart actualizado: de $current_version a $new_version"
-                    has_changes=true
-                  fi
-                fi
-              fi
-            done
-
-            # Verifica y actualiza Kubernetes YAML (deployment.yml, service.yml)
-            for yaml in $(find . -name 'deployment.yml' -o -name 'service.yml' -o -name '*.yaml' -o -name '*.yml'); do
-              if [ -f "$yaml" ]; then
-                current_image=$(yq e '.. | select(has("image")) | .image' $yaml 2>/dev/null | head -1 || echo "")
-                if [ -n "$current_image" ]; then
-                  image_name=$(echo $current_image | cut -d':' -f1)
-                  current_version=$(echo $current_image | cut -d':' -f2)
-                  latest_version=$(curl -s -f "https://registry.hub.docker.com/v2/repositories/$image_name/tags?page_size=100" | jq -r '.results[] | select(.name != "latest") | .name' | sort -V | tail -1 || echo "$current_version")
-                  if [ "$latest_version" != "$current_version" ] && [ -n "$latest_version" ]; then
-                    yq e -i "(.. | select(has(\"image\")) | .image) = \"$image_name:$latest_version\"" $yaml
-                    git add $yaml
-                    git commit -m "Update Kubernetes YAML $image_name to version $latest_version in $branch"
-                    echo "Kubernetes YAML actualizado: $image_name de $current_version a $latest_version"
-                    has_changes=true
-                  fi
-                fi
-              fi
-            done
-
-            # Crear PR solo si hay cambios
-            if [ "$branch" != "$target_branch" ] && $has_changes; then
-              temp_branch="update-versions-$(date +%s)"
-              git checkout -b $temp_branch
-              git push origin $temp_branch
-              gh pr create --title "Automated version updates for $branch" --body "Updated versions in $branch" --base $target_branch --head $temp_branch
-            elif [ "$branch" != "$target_branch" ] && ! $has_changes; then
-              echo "No hay cambios para crear un PR en $branch."
-            fi
-          }
-
-          # Ejecutar chequeo en ambas ramas
-          check_and_update $FEAT_BRANCH $MAIN_BRANCH
-          check_and_update $MAIN_BRANCH $MAIN_BRANCH
+          RENOVATE_BASE_BRANCHES: prod-payments-k8s # Usamos variable de entorno para evitar problemas de sintaxis
+          RENOVATE_BRANCH_PREFIX: renovate/ # Prefijo para ramas temporales
+          RENOVATE_PR_CREATION: immediate # Crea PRs inmediatamente
+          RENOVATE_AUTOMERGE: false # No automerge para que revises los PRs
+          RENOVATE_DEFAULT_BRANCH: prod-payments-k8s # Rama por defecto
+          RENOVATE_ONBOARDING: false # Evita el PR de onboarding
+          LOG_LEVEL: debug # Para depuración
+        with:
+          configurationFile: renovate.json
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
