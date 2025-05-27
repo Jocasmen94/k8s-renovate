@@ -27,7 +27,7 @@
   "dependencyDashboardApproval": true,
   "platform": "github",
   "repository": "Jocasmen94/k8s-renovate",
-  "recreateWhen": "never",
+  "recreateWhen": "auto",
   "prCreation": "immediate",
   "baseBranches": ["prod-payments-k8s"]
 }
