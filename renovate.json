@@ -17,10 +17,15 @@
     "assignees": ["Jocasmen94"],
     "labels": ["dependencies"],
     "branchPrefix": "renovate/",
-    "prHourlyLimit": 13,
+    "prHourlyLimit": 4,
     "prConcurrentLimit": 5,
-    "dependencyDashboard": false,
+    "dependencyDashboard": true,  
+    "dependencyDashboardTitle": "Dependency Dashboard",  
+    "dependencyDashboardLabels": ["dependencies", "renovate"],  
+    "dependencyDashboardAutoclose": true,  
     "platform": "github",
     "repository": "Jocasmen94/k8s-renovate",
-    "recreateWhen": "never"  
+    "recreateWhen": "never",
+    "prCreation": "not-pending",
+    "ignorePrEdits": false
   }
