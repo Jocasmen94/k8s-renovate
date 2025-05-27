@@ -58,6 +58,9 @@ jobs:
             # Cambia a la rama especificada
             git checkout $branch
 
+            # Variable para rastrear si hay cambios
+            has_changes=false
+
             # Verifica y actualiza versiones en Dockerfile
             if [ -f "Dockerfile" ]; then
               current_image=$(grep -o 'FROM .*:.*' Dockerfile | head -1 | cut -d' ' -f2 || echo "")
@@ -69,8 +72,8 @@ jobs:
                   sed -i "s|FROM $image_name:$current_version|FROM $image_name:$latest_version|" Dockerfile
                   git add Dockerfile
                   git commit -m "Update Dockerfile $image_name to version $latest_version in $branch"
-                  git push origin $branch
                   echo "Dockerfile actualizado: $image_name de $current_version a $latest_version"
+                  has_changes=true
                 fi
               fi
             fi
@@ -85,8 +88,8 @@ jobs:
                     yq e -i ".version = \"$new_version\"" $chart_file
                     git add $chart_file
                     git commit -m "Update Helm Chart to version $new_version in $branch"
-                    git push origin $branch
                     echo "Helm Chart actualizado: de $current_version a $new_version"
+                    has_changes=true
                   fi
                 fi
               fi
@@ -104,19 +107,21 @@ jobs:
                     yq e -i "(.. | select(has(\"image\")) | .image) = \"$image_name:$latest_version\"" $yaml
                     git add $yaml
                     git commit -m "Update Kubernetes YAML $image_name to version $latest_version in $branch"
-                    git push origin $branch
                     echo "Kubernetes YAML actualizado: $image_name de $current_version a $latest_version"
+                    has_changes=true
                   fi
                 fi
               fi
             done
 
-            # Crear PR si hay cambios y no es la rama principal
-            if [ "$branch" != "$target_branch" ] && [ -n "$(git diff --name-only HEAD^ HEAD)" ]; then
+            # Crear PR solo si hay cambios
+            if [ "$branch" != "$target_branch" ] && $has_changes; then
               temp_branch="update-versions-$(date +%s)"
               git checkout -b $temp_branch
               git push origin $temp_branch
               gh pr create --title "Automated version updates for $branch" --body "Updated versions in $branch" --base $target_branch --head $temp_branch
+            elif [ "$branch" != "$target_branch" ] && ! $has_changes; then
+              echo "No hay cambios para crear un PR en $branch."
             fi
           }
 
