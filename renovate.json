@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "baseBranches": ["prod-payments-k8s"],
+  "baseBranches": ["feat/prod-payments-k8s"],
   "kubernetes": {
     "managerFilePatterns": ["/\\.yml$/", "/\\.yaml$/"]
   },
