@@ -20,8 +20,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'schedule' && 'feat/prod-payments-k8s' || github.ref }}
+          ref: main
           fetch-depth: 0
+
+      - name: Switch to feat/prod-payments-k8s for schedule
+        if: github.event_name == 'schedule'
+        run: |
+          git checkout feat/prod-payments-k8s
+          git pull origin feat/prod-payments-k8s
 
       - name: List files in repository
         run: |
