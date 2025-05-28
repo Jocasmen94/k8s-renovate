@@ -1,5 +1,5 @@
 # Imagen desactualizada de .NET
-FROM mcr.microsoft.com/dotnet/sdk:9.0
+FROM mcr.microsoft.com/dotnet/sdk:6.0
 
 # Establecer el directorio de trabajo
 WORKDIR /app
@@ -21,4 +21,4 @@ RUN dotnet build -c Release -o out
 EXPOSE 5000
 
 # Comando de inicio
-CMD ["dotnet", "out/MyApp.dll"]
+CMD ["dotnet", "out/MyApp.dll"] 
