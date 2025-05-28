@@ -24,8 +24,8 @@
     "dependencies"
   ],
   "branchPrefix": "renovate/",
-  "prHourlyLimit": 4,
-  "prConcurrentLimit": 5,
+  "prHourlyLimit": 12,
+  "prConcurrentLimit": 10,
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard",
   "dependencyDashboardLabels": [
