@@ -26,8 +26,8 @@
     "dependencies"
   ],
   "branchPrefix": "renovate/",
-  "prHourlyLimit": 4,
-  "prConcurrentLimit": 5,
+  "prHourlyLimit": 12,
+  "prConcurrentLimit": 10,
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard",
   "dependencyDashboardLabels": [
@@ -40,12 +40,6 @@
   "recreateWhen": "auto",
   "dependencyDashboardFooter": "\n- [ ] <!-- manual job -->Check this box to trigger a request for Renovate to run again on this repository\n",
   "prCreation": "immediate",
-  "postUpgradeTasks": {
-    "commands": [
-      "git push origin --delete {{{branchName}}}"
-    ],
-    "fileFilters": ["**/*"],
-    "executionMode": "branch",
   "packageRules": [
     {
       "matchCategories": [
@@ -57,5 +51,4 @@
       ]
     }
   ]
- }
 }
