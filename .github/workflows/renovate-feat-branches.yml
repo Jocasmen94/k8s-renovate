@@ -2,7 +2,7 @@ name: Check and Update Versions with Renovate
 
 on:
   schedule:
-    - cron: '*/2 * * * *' # Ejecuta cada 2 minutos (para prueba)
+    - cron: '*/20 * * * *' # Ejecuta cada 2 minutos (para prueba)
   push:
     branches:
       - feat/prod-payments-k8s
