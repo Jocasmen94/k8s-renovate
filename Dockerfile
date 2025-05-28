@@ -1,5 +1,5 @@
 # Imagen desactualizada de .NET
-FROM mcr.microsoft.com/dotnet/sdk:5.0
+FROM mcr.microsoft.com/dotnet/sdk:9.0
 
 # Establecer el directorio de trabajo
 WORKDIR /app
