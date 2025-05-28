@@ -1,54 +1,31 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "baseBranches": [
-    "feat/prod-payments-k8s"
-  ],
+  "extends": ["config:recommended"],
+  "baseBranches": ["feat/prod-payments-k8s"],
+  "docker": {
+    "enabled": true,
+    "fileMatch": ["^Dockerfile$"]
+  },
   "helmv3": {
     "enabled": true,
-    "managerFilePatterns": [
-      "/(^|/)Chart\\.yaml$/"
-    ]
+    "fileMatch": ["(^|/)Chart\\.yaml$"]
   },
   "kubernetes": {
     "enabled": true,
-    "managerFilePatterns": [
-      "/\\.yml$/",
-      "/\\.yaml$/"
-    ]
+    "fileMatch": ["\\.yml$", "\\.yaml$"]
   },
-  "assignees": [
-    "Jocasmen94"
-  ],
-  "labels": [
-    "dependencies"
-  ],
+  "assignees": ["Jocasmen94"],
+  "labels": ["dependencies"],
   "branchPrefix": "renovate/",
   "prHourlyLimit": 12,
   "prConcurrentLimit": 10,
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard",
-  "dependencyDashboardLabels": [
-    "dependencies",
-    "renovate"
-  ],
+  "dependencyDashboardLabels": ["dependencies", "renovate"],
   "dependencyDashboardApproval": false,
   "dependencyDashboardAutoclose": true,
   "pruneStaleBranches": true,
   "recreateWhen": "auto",
   "dependencyDashboardFooter": "\n- [ ] <!-- manual job -->Check this box to trigger a request for Renovate to run again on this repository\n",
-  "prCreation": "immediate",
-  "packageRules": [
-    {
-      "matchCategories": [
-        "docker"
-      ],
-      "enabled": true,
-      "managerFilePatterns": [
-        "/^Dockerfile$/"
-      ]
-    }
-  ]
+  "prCreation": "immediate"
 }
