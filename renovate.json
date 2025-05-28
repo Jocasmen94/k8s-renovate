@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "baseBranches": ["feat/prod-payments-k8s"],
+  "baseBranches": ["feat/prod-payments-k8s", "feat/prod-main-test"],
   "docker": {
     "enabled": true,
     "fileMatch": ["^Dockerfile$"]
