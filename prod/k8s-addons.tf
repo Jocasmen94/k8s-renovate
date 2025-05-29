@@ -103,7 +103,7 @@ locals {
       }
       enable_doppler      = true
       doppler_helm_config = {
-        version = "1.6.0"  # Especificamos la versión del chart de Doppler, lo agarra dinamicamente aqui la version
+        version = "1.2.3"  # Especificamos la versión del chart de Doppler, lo agarra dinamicamente aqui la version
       }
     }
   ]
