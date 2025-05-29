@@ -14,6 +14,10 @@
     "enabled": true,
     "fileMatch": ["\\.yml$", "\\.yaml$"]
   },
+  "terraform": {
+    "enabled": true,
+    "fileMatch": ["\\.tf$", "\\.tfvars$"]
+  },
   "assignees": ["Jocasmen94"],
   "labels": ["dependencies"],
   "branchPrefix": "renovate/",
@@ -40,7 +44,92 @@
       "depNameTemplate": "{{{depName}}}",
       "registryUrlTemplate": "{{{registryUrl}}}",
       "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "cert_manager_version\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "cert-manager",
+      "registryUrlTemplate": "https://charts.jetstack.io",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "ingress_nginx_version\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "ingress-nginx",
+      "registryUrlTemplate": "https://kubernetes.github.io/ingress-nginx",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "external_dns_config\\s*=\\s*\\{[\\s\\S]*?version\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "external-dns",
+      "registryUrlTemplate": "https://charts.bitnami.com/bitnami",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "datadog_operator_chart_version\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "datadog-operator",
+      "registryUrlTemplate": "https://helm.datadoghq.com",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "datadog_agent_chart_version\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "datadog",
+      "registryUrlTemplate": "https://helm.datadoghq.com",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "doppler_helm_config\\s*=\\s*\\{[\\s\\S]*?version\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "doppler-operator",
+      "registryUrlTemplate": "https://helm.doppler.com",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "image_tag\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "ingress-nginx/controller",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "(cluster_agent_image_tag|agents_image_tag)\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "datadog/agent",
+      "versioningTemplate": "docker"
     }
   ]
 }
-
