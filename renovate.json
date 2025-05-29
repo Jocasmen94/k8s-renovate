@@ -136,6 +136,6 @@
       "registryUrls": ["https://helm.doppler.com"]
     }
   ],
-  "ignoreDeps": ["ingress-nginx/controller", "doppler-operator"],
+  "ignoreDeps": ["ingress-nginx/controller", "doppler-operator", "datadog-operator"],
   "fileMatch": ["prod/k8s-addons.tf"]
 }
