@@ -36,7 +36,7 @@ locals {
           ingress_class_name         = "nginx"
           internal                   = false
           admission_webhooks_enabled = false
-          image_tag                  = "v1.11.5"
+          image_tag                  = "v1.12.2"
         }
       ]
       enable_external_dns = true
