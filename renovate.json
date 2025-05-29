@@ -111,7 +111,7 @@
         "doppler_helm_config\\s*=\\s*\\{[\\s\\S]*?version\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
       "datasourceTemplate": "helm",
-      "depNameTemplate": "doppler-operator",
+      "depNameTemplate": "doppler-kubernetes-operator",
       "registryUrlTemplate": "https://helm.doppler.com",
       "versioningTemplate": "semver"
     },
@@ -141,7 +141,7 @@
     },
     {
       "matchDatasources": ["helm"],
-      "matchPackageNames": ["doppler-operator"],
+      "matchPackageNames": ["doppler-kubernetes-operator"],
       "enabled": true,
       "registryUrls": ["https://helm.doppler.com"]
     }
