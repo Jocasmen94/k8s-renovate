@@ -134,6 +134,5 @@
       "enabled": true,
       "registryUrls": ["https://helm.doppler.com"]
     }
-  ],
-  "ignoreDeps": ["ingress-nginx/controller", "doppler-operator", "datadog-operator"]
+  ]
 }
