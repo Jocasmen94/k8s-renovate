@@ -114,6 +114,17 @@
       "depNameTemplate": "doppler-operator",
       "registryUrlTemplate": "https://helm.doppler.com",
       "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.yaml$"],
+      "matchStrings": [
+        "apiVersion:\\s*argoproj\\.io/v1alpha1\\s*\\n\\s*kind:\\s*Application\\s*\\n[\\s\\S]*?sources:\\s*\\n\\s*-\\s*repoURL:\\s*(?<registryUrl>[^\\s]+)\\s*\\n\\s*chart:\\s*(?<depName>[^\\s]+)\\s*\\n\\s*targetRevision:\\s*(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "{{{depName}}}",
+      "registryUrlTemplate": "{{{registryUrl}}}",
+      "versioningTemplate": "semver"
     }
   ],
   "packageRules": [
