@@ -14,10 +14,6 @@
     "enabled": true,
     "fileMatch": ["\\.yml$", "\\.yaml$"]
   },
-  "terraform": {
-    "enabled": true,
-    "fileMatch": ["\\.tf$", "\\.tfvars$"]
-  },
   "assignees": ["Jocasmen94"],
   "labels": ["dependencies"],
   "branchPrefix": "renovate/",
@@ -36,14 +32,23 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["\\.yaml$"],
+      "fileMatch": ["\\.tf$"],
       "matchStrings": [
-        "apiVersion:\\s*argoproj\\.io/v1alpha1\\s*\\n\\s*kind:\\s*Application\\s*\\n[\\s\\S]*?sources:\\s*\\n\\s*-\\s*repoURL:\\s*(?<registryUrl>[^\\s]+)\\s*\\n\\s*chart:\\s*(?<depName>[^\\s]+)\\s*\\n\\s*targetRevision:\\s*(?<currentValue>[^\\s]+)"
+        "image_tag\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
-      "datasourceTemplate": "helm",
-      "depNameTemplate": "{{{depName}}}",
-      "registryUrlTemplate": "{{{registryUrl}}}",
-      "versioningTemplate": "semver"
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "ingress-nginx/controller",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.tf$"],
+      "matchStrings": [
+        "(cluster_agent_image_tag|agents_image_tag)\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "datadog/agent",
+      "versioningTemplate": "docker"
     },
     {
       "customType": "regex",
@@ -110,26 +115,6 @@
       "depNameTemplate": "doppler-operator",
       "registryUrlTemplate": "https://helm.doppler.com",
       "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["\\.tf$"],
-      "matchStrings": [
-        "image_tag\\s*=\\s*\"(?<currentValue>[^\"]+)\""
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "ingress-nginx/controller",
-      "versioningTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["\\.tf$"],
-      "matchStrings": [
-        "(cluster_agent_image_tag|agents_image_tag)\\s*=\\s*\"(?<currentValue>[^\"]+)\""
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "datadog/agent",
-      "versioningTemplate": "docker"
     }
   ]
 }
