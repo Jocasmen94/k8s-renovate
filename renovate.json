@@ -28,7 +28,6 @@
   "recreateWhen": "auto",
   "dependencyDashboardFooter": "\n- [ ] <!-- manual job -->Check this box to trigger a request for Renovate to run again on this repository\n",
   "prCreation": "immediate",
-  "onboarding": false,
   "customManagers": [
     {
       "customType": "regex",
@@ -136,6 +135,5 @@
       "registryUrls": ["https://helm.doppler.com"]
     }
   ],
-  "ignoreDeps": ["ingress-nginx/controller", "doppler-operator", "datadog-operator"],
-  "fileMatch": ["prod/k8s-addons.tf"]
+  "ignoreDeps": ["ingress-nginx/controller", "doppler-operator", "datadog-operator"]
 }
