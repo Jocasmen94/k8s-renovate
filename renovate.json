@@ -28,5 +28,19 @@
   "recreateWhen": "auto",
   "dependencyDashboardFooter": "\n- [ ] <!-- manual job -->Check this box to trigger a request for Renovate to run again on this repository\n",
   "prCreation": "immediate",
-  "onboarding": false
+  "onboarding": false,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["\\.yaml$"],
+      "matchStrings": [
+        "apiVersion:\\s*argoproj\\.io/v1alpha1\\s*\\n.*kind:\\s*Application\\s*\\n.*sources:\\s*\\n.*-.*chart:\\s*(?<depName>[^\\s]+)\\s*\\n.*targetRevision:\\s*(?<currentValue>[^\\s]+)\\s*\\n.*repoURL:\\s*(?<registryUrl>[^\\s]+)"
+      ],
+      "datasourceTemplate": "helm",
+      "depNameTemplate": "{{{depName}}}",
+      "registryUrlTemplate": "{{{registryUrl}}}",
+      "versioningTemplate": "semver"
+    }
+  ]
 }
+
