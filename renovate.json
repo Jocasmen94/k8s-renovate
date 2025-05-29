@@ -37,7 +37,7 @@
         "image_tag\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
       "datasourceTemplate": "docker",
-      "depNameTemplate": "ingress-nginx/controller",
+      "depNameTemplate": "k8s.gcr.io/ingress-nginx/controller",
       "versioningTemplate": "docker"
     },
     {
@@ -116,5 +116,26 @@
       "registryUrlTemplate": "https://helm.doppler.com",
       "versioningTemplate": "semver"
     }
-  ]
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["k8s.gcr.io/ingress-nginx/controller"],
+      "enabled": true
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchPackageNames": ["datadog-operator"],
+      "enabled": true,
+      "registryUrls": ["https://helm.datadoghq.com"]
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchPackageNames": ["doppler-operator"],
+      "enabled": true,
+      "registryUrls": ["https://helm.doppler.com"]
+    }
+  ],
+  "ignoreDeps": ["ingress-nginx/controller", "doppler-operator"],
+  "fileMatch": ["prod/k8s-addons.tf"]
 }
