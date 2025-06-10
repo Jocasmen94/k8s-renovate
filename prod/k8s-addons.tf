@@ -15,7 +15,7 @@ locals {
       resource_group_name   = local.resource_group_name
       cluster_name          = local.cluster_name
       enable_cert_manager   = true
-      cert_manager_version  = "1.17.1"
+      cert_manager_version  = "1.18.0"
       enable_cluster_issuer = true
       cluster_issuers = [
         {
