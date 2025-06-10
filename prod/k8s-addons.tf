@@ -32,7 +32,7 @@ locals {
       ingress_nginx_controllers = [
         {
           name                       = "ingress-nginx-controller"
-          ingress_nginx_version      = "4.12.1"
+          ingress_nginx_version      = "4.12.3"
           ingress_class_name         = "nginx"
           internal                   = false
           admission_webhooks_enabled = false
