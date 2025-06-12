@@ -9,7 +9,7 @@ spec:
   sources:
     - repoURL: https://helm.datadoghq.com
       chart: datadog-operator
-      targetRevision: 2.9.2 
+      targetRevision: 2.10.0 
       helm:
         releaseName: datadog-operator
         valueFiles:
