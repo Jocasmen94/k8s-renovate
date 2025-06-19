@@ -1,0 +1,17 @@
+name: Debug Renovate Actor
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - feat/n1-prod-payments-k8s
+      - feat/prod-main-test
+
+jobs:
+  debug-actor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log GitHub Actor
+        run: |
+          echo "Actor: $GITHUB_ACTOR"
+          echo "Event Path User: $(cat $GITHUB_EVENT_PATH | jq -r .pull_request.user.login)"
