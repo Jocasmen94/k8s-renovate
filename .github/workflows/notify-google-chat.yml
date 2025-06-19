@@ -1,14 +1,15 @@
-name: Notify Google Chat for PRs
+name: Notify
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened, closed]
+  pull_request_review_comment:
+    types: [created]
   workflow_dispatch: # Añadido para ejecución manual
 
 jobs:
-  notify-google-chat:
+  notify:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Debug Workflow Trigger
         run: |
@@ -16,14 +17,11 @@ jobs:
           echo "Actor: $GITHUB_ACTOR"
           echo "Repository: $GITHUB_REPOSITORY"
           echo "Ref: $GITHUB_REF"
-          echo "Base Ref: ${{ github.event.pull_request.base.ref }}"
-          echo "Head Ref: ${{ github.event.pull_request.head.ref }}"
+          echo "Base Ref: ${{ github.event.pull_request.base.ref || 'N/A' }}"
+          echo "Head Ref: ${{ github.event.pull_request.head.ref || 'N/A' }}"
           echo "Event Path Content: $(cat $GITHUB_EVENT_PATH || echo 'File not found')"
       - name: Google Chat Notification
-        uses: nakamuraos/google-chat-notifications@v3.4.0
+        uses: CommonMarvel/google-chat-notification@v2
         with:
-          title: "PR Update"
-          subtitle: ${{ github.event.pull_request.title || github.event.head_commit.message || 'No title available' }}
-          webhookUrl: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-          status: ${{ job.status }}
+          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
         if: always() # Asegura que se ejecute incluso si falla un paso previo
