@@ -6,6 +6,7 @@ on:
     branches:
       - feat/n1-prod-payments-k8s
       - feat/prod-main-test
+  workflow_dispatch: # Añadido para ejecución manual
 
 jobs:
   debug-actor:
