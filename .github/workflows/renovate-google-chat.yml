@@ -8,15 +8,20 @@ on:
       - feat/prod-main-test
     paths-ignore:
       - '**.md'
+  workflow_dispatch: # Añadido para ejecución manual
 
 jobs:
   notify-google-chat:
     runs-on: ubuntu-latest
-    if: github.actor == 'renovate[bot]' || github.actor == 'renovate-bot' # Solo para PRs de Renovate
+    if: github.actor == 'renovate[bot]' || github.actor == 'renovate-bot' || github.actor == 'Jocasmen94' # Incluye tu usuario
     steps:
+      - name: Debug Actor
+        run: |
+          echo "Actor: $GITHUB_ACTOR"
+          echo "Event Path User: $(cat $GITHUB_EVENT_PATH | jq -r .pull_request.user.login)"
       - name: Send Google Chat Notification
         env:
-          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }} # Almacena la URL como secreto
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
         run: |
           PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
           PR_URL=$(jq -r .pull_request.html_url "$GITHUB_EVENT_PATH")
