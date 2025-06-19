@@ -1,21 +1,31 @@
-name: Notify Google Chat for PRs
+name: Notify Google Chat for Renovate PRs
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths-ignore:
-      - '**.md'
+    # Ejecuta en cualquier PR, sin importar rama ni archivo
   workflow_dispatch:
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Send PR info to Google Chat
-        env:
-          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+      - name: Print GitHub context
+        run: echo '${{ toJson(github) }}'
+
+      - name: Debug PR Info
+        if: ${{ github.event.pull_request }}
         run: |
-          echo "Enviando notificación a Google Chat..."
-          curl -X POST -H "Content-Type: application/json" \
-            -d "{\"text\": \"🛠 Nuevo PR detectado:\n\n*<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>*\"}" \
-            "$GOOGLE_CHAT_WEBHOOK_URL"
+          echo "Actor: ${{ github.actor }}"
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "PR URL: ${{ github.event.pull_request.html_url }}"
+          echo "PR Head Ref: ${{ github.event.pull_request.head.ref }}"
+          echo "PR Base Ref: ${{ github.event.pull_request.base.ref }}"
+          echo "Is Renovate? ${{ startsWith(github.actor, 'renovate') }}"
+
+      - name: Notify Google Chat
+        if: ${{ github.event.pull_request && startsWith(github.actor, 'renovate') }}
+        run: |
+          curl -X POST -H 'Content-Type: application/json' \
+            --data "{\"text\": \"🛠 Renovate creó un nuevo PR:\n\n<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\"}" \
+            "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
