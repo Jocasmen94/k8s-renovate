@@ -3,9 +3,7 @@ name: Notify Google Chat for Renovate PRs
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches:
-      - feat/n1-prod-payments-k8s
-      - feat/prod-main-test
+    # Eliminamos la restricción de branches para probar con todas
     paths-ignore:
       - '**.md'
   workflow_dispatch: # Añadido para ejecución manual
