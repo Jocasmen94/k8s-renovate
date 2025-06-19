@@ -13,13 +13,17 @@ on:
 jobs:
   notify-google-chat:
     runs-on: ubuntu-latest
-    if: github.actor == 'renovate[bot]' || github.actor == 'renovate-bot' || github.actor == 'Jocasmen94' # Incluye tu usuario
+    # Relajamos la condición para depuración
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
-      - name: Debug Actor
+      - name: Debug Actor and Event
         run: |
           echo "Actor: $GITHUB_ACTOR"
-          echo "Event Path User: $(cat $GITHUB_EVENT_PATH | jq -r .pull_request.user.login)"
+          echo "Event Name: $GITHUB_EVENT_NAME"
+          echo "Event Path Content: $(cat $GITHUB_EVENT_PATH)"
+          echo "Pull Request User: $(cat $GITHUB_EVENT_PATH | jq -r .pull_request.user.login)"
       - name: Send Google Chat Notification
+        if: github.actor == 'renovate[bot]' || github.actor == 'renovate-bot' || github.actor == 'Jocasmen94'
         env:
           GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
         run: |
