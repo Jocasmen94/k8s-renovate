@@ -3,23 +3,21 @@ name: Notify Google Chat for Renovate PRs
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    # Eliminamos la restricción de branches para probar con todas
-    paths-ignore:
-      - '**.md'
   workflow_dispatch: # Añadido para ejecución manual
 
 jobs:
   notify-google-chat:
     runs-on: ubuntu-latest
-    # Relajamos la condición para depuración
+    # Condición mínima para depuración
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
-      - name: Debug Actor and Event
+      - name: Debug Workflow Trigger
         run: |
-          echo "Actor: $GITHUB_ACTOR"
           echo "Event Name: $GITHUB_EVENT_NAME"
-          echo "Event Path Content: $(cat $GITHUB_EVENT_PATH)"
-          echo "Pull Request User: $(cat $GITHUB_EVENT_PATH | jq -r .pull_request.user.login)"
+          echo "Actor: $GITHUB_ACTOR"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Ref: $GITHUB_REF"
+          echo "Event Path Content: $(cat $GITHUB_EVENT_PATH || echo 'File not found')"
       - name: Send Google Chat Notification
         if: github.actor == 'renovate[bot]' || github.actor == 'renovate-bot' || github.actor == 'Jocasmen94'
         env:
