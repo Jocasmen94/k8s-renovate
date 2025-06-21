@@ -64,8 +64,8 @@ locals {
         apm_port_enabled            = true
         logs_enabled                = true
         container_include_logs      = "kube_namespace:payments"
-        cluster_agent_image_tag     = "7.64.3"  # Actualizado a versión compatible
-        agents_image_tag            = "7.64.3"  # Actualizado a versión compatible
+        cluster_agent_image_tag     = "7.67.0"  # Actualizado a versión compatible
+        agents_image_tag            = "7.67.0"  # Actualizado a versión compatible
         set_values = [
           {
             name  = "datadog.securityAgent.runtime.enabled"
