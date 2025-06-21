@@ -57,7 +57,7 @@ locals {
         enable_datadog_monitor         = true
       }
       datadog_agent_helm_config = {
-        datadog_agent_chart_version = "3.111.1"  # Pasado como variable
+        datadog_agent_chart_version = "3.119.0"  # Pasado como variable
         api_key                     = var.datadog_api_key
         app_key                     = var.datadog_app_key
         cluster_name                = local.cluster_name
