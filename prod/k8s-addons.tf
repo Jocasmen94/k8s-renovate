@@ -51,7 +51,7 @@ locals {
       }
       enable_datadog_operator = true
       datadog_operator_helm_config = {
-        datadog_operator_chart_version = "2.9.2"  # Pasado como variable
+        datadog_operator_chart_version = "2.11.1"  # Pasado como variable
         api_key                        = var.datadog_api_key
         app_key                        = var.datadog_app_key
         enable_datadog_monitor         = true
