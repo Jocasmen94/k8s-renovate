@@ -41,7 +41,7 @@ locals {
       ]
       enable_external_dns = true
       external_dns_config = {
-        version                  = "6.24.1"  # Actualizado a la versión más reciente (7 May 2025)
+        version                  = "8.9.2"  # Actualizado a la versión más reciente (7 May 2025)
         use_cloudflare_api_token = true
         email                    = var.cloudflare_email
         cloudflare_api_token     = var.cloudflare_api_token
